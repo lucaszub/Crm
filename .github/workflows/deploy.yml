@@ -50,6 +50,4 @@ jobs:
         with:
           app-name: acrcrmplanname
           images: acrcrm.azurecr.io/acrcrm:v001
-
-
-az webapp identity assign --resource-group <nom-du-groupe-de-ressources> --name <nom-de-l-app-service>
+# az webapp identity assign --resource-group <nom-du-groupe-de-ressources> --name <nom-de-l-app-service>
