@@ -37,16 +37,16 @@ jobs:
       # Tag Docker image
       - name: Tag Docker image
         run: |
-          docker tag crm-image:latest acrcrmlucasz.azurecr.io/acrcrm:latest
+          docker tag crm-image:latest acrcrm.azurecr.io/acrcrm:latest
 
       # Push Docker image to ACR
       - name: Push Docker image to ACR
         run: |
-          docker push acrcrmlucasz.azurecr.io/acrcrm:latest
+          docker push acrcrm.azurecr.io/acrcrm:latest
 
       # Déployer sur Azure Web App
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: acrcrmplanname
-          images: acrcrmlucasz.azurecr.io/acrcrm:latest
+          images: acrcrm.azurecr.io/acrcrm:latest
