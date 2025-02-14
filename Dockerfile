@@ -31,20 +31,3 @@ EXPOSE 8001
 CMD ["uvicorn", "main:app", "--host", "0.0.0.0", "--port", "8001"]
 
 
-
-# docker run -p 8001:8001 \
-#   -e AZURE_CLIENT_ID=<votre_client_id> \
-#   -e AZURE_TENANT_ID=5850cff6-c715-47ec-817a-e899a75ecd04 \
-#   -e AZURE_CLIENT_SECRET=<votre_client_secret> \
-#   fastapi-app
-
-
-
-  docker run -p 8001:8001 `
-  -e AZURE_CLIENT_ID=e97b3181-1988-4b98-a726-8c5bc5680cef `
-  -e AZURE_TENANT_ID=5850cff6-c715-47ec-817a-e899a75ecd04 `
-  -e AZURE_CLIENT_SECRET=secret-crm `
-  fastapi-app
-
-
-  az webapp create --name weatherapp --resource-group myResourceGroup --plan myAppServicePlan --deployment-container-image-name weatherapplucasz.azurecr.io/weatherapp:latest
