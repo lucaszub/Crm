@@ -7,7 +7,7 @@ on:
 
 jobs:
   build_and_push:
-    runs-on: ubuntu-v001
+    runs-on: ubuntu-latest
 
     steps:
       # Checkout le code source
@@ -32,22 +32,21 @@ jobs:
       # Build Docker image
       - name: Build Docker image
         run: |
-          docker build -t crm-image:v001 .
+          docker build -t crm-image:latest .
 
       # Tag Docker image
       - name: Tag Docker image
         run: |
-          docker tag crm-image:v001 acrcrm.azurecr.io/acrcrm:v001
+          docker tag crm-image:latest acrcrm.azurecr.io/acrcrm:latest
 
       # Push Docker image to ACR
       - name: Push Docker image to ACR
         run: |
-          docker push acrcrm.azurecr.io/acrcrm:v001
+          docker push acrcrm.azurecr.io/acrcrm:latest
 
       # Déployer sur Azure Web App
       - name: Deploy to Azure Web App
         uses: azure/webapps-deploy@v2
         with:
           app-name: acrcrmplanname
-          images: acrcrm.azurecr.io/acrcrm:v001
-# az webapp identity assign --resource-group <nom-du-groupe-de-ressources> --name <nom-de-l-app-service>
+          images: acrcrm.azurecr.io/acrcrm:latest
