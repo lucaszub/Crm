@@ -1,43 +1,40 @@
+import os
 import pyodbc
-from fastapi import FastAPI, HTTPException
-from pydantic import BaseModel
-from typing import List
-import uvicorn
-from azure.keyvault.secrets import SecretClient
 from azure.identity import DefaultAzureCredential
-import os 
-
+from azure.keyvault.secrets import SecretClient
+import logging
+from fastapi import FastAPI, HTTPException
 
 # Initialisation de la connexion à Azure Key Vault
 key_vault_name = "secret-crm"
 KVUri = f"https://{key_vault_name}.vault.azure.net"
 
-try:
-    credential = DefaultAzureCredential()
-    client = SecretClient(vault_url=KVUri, credential=credential)
+# Configurer FastAPI
+app = FastAPI()
 
-    # Récupération des secrets stockés
-    server = client.get_secret("server-db").value
-    database = client.get_secret("database").value
-    username = client.get_secret("username").value
-    # password = client.get_secret("password").value
-    password = client.get_secret("password-db").value
+# Configurer le logging
+logging.basicConfig(level=logging.DEBUG)
 
-    if not all([server, database, username, password]):
-        raise ValueError("Un ou plusieurs secrets sont vides ou non récupérés.")
+# Récupérer les secrets stockés dans Azure Key Vault
+def get_secret_from_keyvault(secret_name: str):
+    try:
+        credential = DefaultAzureCredential()
+        client = SecretClient(vault_url=KVUri, credential=credential)
+        secret = client.get_secret(secret_name).value
+        logging.debug(f"Secret récupéré pour {secret_name}: {secret}")
+        return secret
+    except Exception as e:
+        logging.error(f"Erreur lors de la récupération du secret {secret_name} depuis Azure Key Vault : {e}")
+        raise HTTPException(status_code=500, detail=f"Erreur de récupération du secret {secret_name}")
 
-except Exception as e:
-    print(f"❌ Erreur lors de la récupération des secrets Azure Key Vault : {e}")
-    raise
+# Récupération des secrets nécessaires pour la connexion à la base de données
+server = get_secret_from_keyvault("server-db")
+database = get_secret_from_keyvault("database")
+username = get_secret_from_keyvault("username")
+password = get_secret_from_keyvault("password-db")
 
-# Vérification des valeurs récupérées (sans afficher le mot de passe)
-print(f"✅ Connexion à SQL Server avec :")
-print(f"- Server: {server}")
-print(f"- Database: {database}")
-print(f"- Username: {username}")
-
-# Définition du driver ODBC
-driver = "{ODBC Driver 18 for SQL Server}"  # Assure-toi qu'il est bien installé
+# Définir le driver ODBC pour SQL Server
+driver = "{ODBC Driver 18 for SQL Server}"
 
 # Fonction de connexion à la base de données SQL Server
 def get_db_connection():
@@ -45,51 +42,22 @@ def get_db_connection():
         conn = pyodbc.connect(
             f"DRIVER={driver};SERVER={server};PORT=1433;DATABASE={database};UID={username};PWD={password}"
         )
+        logging.debug("Connexion à la base de données réussie")
         return conn
     except pyodbc.Error as e:
-        print(f"❌ Erreur de connexion à la base de données : {e}")
-        raise HTTPException(status_code=500, detail="Impossible de se connecter à la base de données")
+        logging.error(f"Erreur de connexion à la base de données : {e}")
+        raise HTTPException(status_code=500, detail="Erreur de connexion à la base de données")
 
-# Création de l'application FastAPI
-app = FastAPI()
-
-# Modèle Pydantic pour la réponse des clients
-class Client(BaseModel):
-    ClientID: int
-    FirstName: str
-    LastName: str
-    Email: str
-    Phone: str
-    Address: str
-
-# Route pour récupérer tous les clients
-@app.get("/clients", response_model=List[Client])
+# Route principale pour récupérer les données des clients
+@app.get("/clients")
 async def get_clients():
     try:
         with get_db_connection() as conn:
             cursor = conn.cursor()
-            cursor.execute("SELECT ClientID, FirstName, LastName, Email, Phone, Address FROM Clients")
+            cursor.execute("SELECT * FROM dbo.Clients")
             rows = cursor.fetchall()
-
-            # Transformation des résultats en liste d'objets Client
-            clients = [
-                Client(
-                    ClientID=row.ClientID,
-                    FirstName=row.FirstName,
-                    LastName=row.LastName,
-                    Email=row.Email,
-                    Phone=row.Phone,
-                    Address=row.Address
-                ) for row in rows
-            ]
-
-        return clients
-
-    except pyodbc.Error as e:
-        print(f"❌ Erreur lors de la récupération des clients : {e}")
+            clients = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
+            return {"clients": clients}
+    except Exception as e:
+        logging.error(f"Erreur lors de la récupération des clients : {e}")
         raise HTTPException(status_code=500, detail="Erreur lors de la récupération des clients")
-
-# Lancement du serveur avec Uvicorn
-if __name__ == "__main__":
-    port = int(os.getenv("PORT", 8000))  # Récupère le port défini par Azure ou 8000 par défaut
-    uvicorn.run(app, host="0.0.0.0", port=port)
