@@ -14,7 +14,7 @@ jobs:
       - name: Checkout code
         uses: actions/checkout@v2
 
-      # Configuration de Docker
+      # Configuration de Docker Buildx
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v2
 
@@ -23,6 +23,11 @@ jobs:
         uses: azure/login@v1
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Vérification de la connexion Azure CLI
+      - name: Check Azure CLI login
+        run: |
+          az account show
 
       # Log in to Azure Container Registry (ACR)
       - name: Log in to ACR
@@ -39,7 +44,7 @@ jobs:
         run: |
           docker tag crm-image:latest acrcrm.azurecr.io/acrcrm:latest
 
-      # Push Docker image to ACR t
+      # Push Docker image to ACR
       - name: Push Docker image to ACR
         run: |
           docker push acrcrm.azurecr.io/acrcrm:latest
