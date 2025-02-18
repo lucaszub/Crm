@@ -39,7 +39,7 @@ jobs:
         run: |
           docker tag crm-image:latest acrcrm.azurecr.io/acrcrm:latest
 
-      # Push Docker image to ACR
+      # Push Docker image to ACR t
       - name: Push Docker image to ACR
         run: |
           docker push acrcrm.azurecr.io/acrcrm:latest
