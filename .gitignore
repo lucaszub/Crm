@@ -4,3 +4,5 @@ test2.py
 __pycache__/
 test.md
 .env
+maintest.py
+requirements_bis.txt
