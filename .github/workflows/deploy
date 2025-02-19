@@ -1,0 +1,47 @@
+name: CI/CD Pipeline for FastAPI App
+
+on:
+  push:
+    branches:
+      - main
+
+jobs:
+  build_and_push:
+    runs-on: ubuntu-latest
+
+    steps:
+      # Checkout le code source
+      - name: Checkout code
+        uses: actions/checkout@v2
+
+      # Configuration de Docker
+      - name: Set up Docker Buildx
+        uses: docker/setup-buildx-action@v2
+
+      # Log in to Azure CLI
+      - name: Log in to Azure CLI
+        uses: azure/login@v1
+        with:
+          creds: ${{ secrets.AZURE_CREDENTIALS }}
+
+      # Log in to Azure Container Registry (ACR)
+      - name: Log in to ACR
+        run: |
+          az acr login --name acrcrm
+
+      # Build Docker image
+      - name: Build Docker image
+        run: |
+          docker build -t acrcrm.azurecr.io/acrcrm:latest .
+
+      # Push Docker image to ACR
+      - name: Push Docker image to ACR
+        run: |
+          docker push acrcrm.azurecr.io/acrcrm:latest
+
+      # # Déployer sur Azure Web App
+      # - name: Deploy to Azure Web App
+      #   uses: azure/webapps-deploy@v2
+      #   with:
+      #     app-name: weatherapp
+      #     images: weatherapplucasz.azurecr.io/weatherapp:latest
