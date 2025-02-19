@@ -76,3 +76,5 @@ jobs:
         with:
           app-name: "mycrm"
           slot-name: "Production"
+          package: "release.zip"
+          start-command: "uvicorn main:app --host 0.0.0.0 --port 8000"
