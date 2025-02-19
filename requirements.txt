@@ -1,7 +1,2 @@
 fastapi==0.95.1
 uvicorn==0.22.0
-python-dotenv==0.20.0
-azure-keyvault-secrets==4.9.0
-azure-identity==1.7.0
-SQLAlchemy==1.4.41
-pyodbc==4.0.32
