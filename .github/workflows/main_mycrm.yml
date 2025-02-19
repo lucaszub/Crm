@@ -75,6 +75,12 @@ jobs:
           tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_834407E97DD44AEABCB2F101DA786DEE }}
           subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_858E19A53C4E48998D0CE9571D9BEFAA }}
 
+      - name: Move files to wwwroot
+        run: |
+          mkdir -p /home/site/wwwroot
+          cp -r * /home/site/wwwroot/
+          ls -lah /home/site/wwwroot
+
       - name: "Deploy to Azure Web App"
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
