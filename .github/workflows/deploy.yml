@@ -32,16 +32,16 @@ jobs:
       # Build Docker image
       - name: Build Docker image
         run: |
-          docker build -t acrcrm.azurecr.io/acrcrm:v0004.
+          docker build -t acrcrm.azurecr.io/acrcrm:v0004 .
 
       # Push Docker image to ACR
       - name: Push Docker image to ACR
         run: |
           docker push acrcrm.azurecr.io/acrcrm:v0004
 
-      # # Déployer sur Azure Web App
-      # - name: Deploy to Azure Web App dd
-      #   uses: azure/webapps-deploy@v2
-      #   with:
-      #     app-name: weatherapp
-      #     images: weatherapplucasz.azurecr.io/weatherapp:latest
+      # Déployer sur Azure Web App
+      - name: Deploy to Azure Web App
+        uses: azure/webapps-deploy@v2
+        with:
+          app-name: weatherapp # Remplace par le nom de ton application Azure Web App
+          images: acrcrm.azurecr.io/acrcrm:v0004 # Assure-toi que c'est le bon nom de l'image
