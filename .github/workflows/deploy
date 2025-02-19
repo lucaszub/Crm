@@ -40,7 +40,7 @@ jobs:
           docker push acrcrm.azurecr.io/acrcrm:latest
 
       # # Déployer sur Azure Web App
-      # - name: Deploy to Azure Web App d
+      # - name: Deploy to Azure Web App dd
       #   uses: azure/webapps-deploy@v2
       #   with:
       #     app-name: weatherapp
