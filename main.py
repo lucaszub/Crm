@@ -33,25 +33,25 @@ def get_secret_from_keyvault(secret_name: str):
         raise HTTPException(status_code=500, detail=f"Erreur de récupération du secret {secret_name}")
 
 # Récupération des secrets nécessaires pour la connexion à la base de données
-# server = get_secret_from_keyvault("server-db")
-# database = get_secret_from_keyvault("database")
-# username = get_secret_from_keyvault("username")
-# password = get_secret_from_keyvault("password-db")
+server = get_secret_from_keyvault("server-db")
+database = get_secret_from_keyvault("database")
+username = get_secret_from_keyvault("username")
+password = get_secret_from_keyvault("password-db")
 
-# Définir le driver ODBC pour SQL Server
-# driver = "{ODBC Driver 18 for SQL Server}"
+#Définir le driver ODBC pour SQL Server
+driver = "{ODBC Driver 18 for SQL Server}"
 
 # Fonction de connexion à la base de données SQL Server
-# def get_db_connection():
-#     try:
-#         conn = pyodbc.connect(
-#             f"DRIVER={driver};SERVER={server};PORT=1433;DATABASE={database};UID={username};PWD={password}"
-#         )
-#         logging.debug("Connexion à la base de données réussie to SQL Server")
-#         return conn
-#     except pyodbc.Error as e:
-#         logging.error(f"Erreur de connexion à la base de données : {e}")
-#         raise HTTPException(status_code=500, detail="Erreur de connexion à la base de données")
+def get_db_connection():
+    try:
+        conn = pyodbc.connect(
+            f"DRIVER={driver};SERVER={server};PORT=1433;DATABASE={database};UID={username};PWD={password}"
+        )
+        logging.debug("Connexion à la base de données réussie to SQL Server")
+        return conn
+    except pyodbc.Error as e:
+        logging.error(f"Erreur de connexion à la base de données : {e}")
+        raise HTTPException(status_code=500, detail="Erreur de connexion à la base de données")
 
 @app.get("testkeyvault")
 def test_keyvault():
@@ -68,16 +68,16 @@ def test_keyvault():
         }
     except Exception as e:
         logging.error(f"Erreur lors de la récupération des secrets : {e}")
-# Route principale pour récupérer les données des clients
-# @app.get("/clients")
-# async def get_clients():
-#     try:
-#         with get_db_connection() as conn:
-#             cursor = conn.cursor()
-#             cursor.execute("SELECT * FROM dbo.Clients")
-#             rows = cursor.fetchall()
-#             clients = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
-#             return {"clients": clients}
-#     except Exception as e:
-#         logging.error(f"Erreur lors de la récupération des clients : {e}")
-#         raise HTTPException(status_code=500, detail="Erreur lors de la récupération des clients")
+#Route principale pour récupérer les données des clients
+@app.get("/clients")
+async def get_clients():
+    try:
+        with get_db_connection() as conn:
+            cursor = conn.cursor()
+            cursor.execute("SELECT * FROM dbo.Clients")
+            rows = cursor.fetchall()
+            clients = [dict(zip([column[0] for column in cursor.description], row)) for row in rows]
+            return {"clients": clients}
+    except Exception as e:
+        logging.error(f"Erreur lors de la récupération des clients : {e}")
+        raise HTTPException(status_code=500, detail="Erreur lors de la récupération des clients")
