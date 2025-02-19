@@ -33,7 +33,6 @@ jobs:
         run: |
           sudo apt-get update
           sudo apt-get install -y unixodbc-dev
-          python -m venv venv
           source venv/bin/activate
           pip install -r requirements.txt
 
@@ -50,7 +49,7 @@ jobs:
             release.zip
             !venv/
 
-  deploy: # 🛠 Correction ici : bien aligné avec "build"
+  deploy:
     runs-on: ubuntu-latest
     needs: build
     environment:
@@ -69,12 +68,6 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
-      - name: Move files to wwwroot
-        run: |
-          mkdir -p /home/site/wwwroot
-          cp -r * /home/site/wwwroot
-          ls -l /home/site/wwwroot
-
       - name: Login to Azure
         uses: azure/login@v2
         with:
@@ -88,3 +81,4 @@ jobs:
         with:
           app-name: "mycrm"
           slot-name: "Production"
+          package: .
