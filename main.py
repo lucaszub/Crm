@@ -15,6 +15,11 @@ app = FastAPI()
 # Configurer le logging
 logging.basicConfig(level=logging.DEBUG)
 
+# Route de test pour vérifier que l'application est accessible
+@app.get("/")
+async def read_root():
+    return {"message": "Hello World"}
+
 # Récupérer les secrets stockés dans Azure Key Vault
 def get_secret_from_keyvault(secret_name: str):
     try:
