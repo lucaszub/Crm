@@ -42,7 +42,7 @@ def get_db_connection():
         conn = pyodbc.connect(
             f"DRIVER={driver};SERVER={server};PORT=1433;DATABASE={database};UID={username};PWD={password}"
         )
-        logging.debug("Connexion à la base de données réussie")
+        logging.debug("Connexion à la base de données réussie to SQL Server")
         return conn
     except pyodbc.Error as e:
         logging.error(f"Erreur de connexion à la base de données : {e}")
