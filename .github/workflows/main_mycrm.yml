@@ -1,3 +1,7 @@
+# Docs for the Azure Web Apps Deploy action: https://github.com/Azure/webapps-deploy
+# More GitHub Actions for Azure: https://github.com/Azure/actions
+# More info on Python, GitHub Actions, and Azure App Service: https://aka.ms/python-webapps-actions
+
 name: Build and deploy Python app to Azure Web App - mycrm
 
 on:
@@ -18,26 +22,17 @@ jobs:
       - name: Set up Python version
         uses: actions/setup-python@v5
         with:
-          python-version: "3.9"
-
-      - name: Install system dependencies
-        run: sudo apt-get update && sudo apt-get install -y g++ unixodbc-dev
+          python-version: '3.9'
 
       - name: Create and start virtual environment
         run: |
           python -m venv venv
           source venv/bin/activate
-
+      
       - name: Install dependencies
         run: pip install -r requirements.txt
-
-      - name: List installed packages
-        run: pip freeze
-
-      - name: Check project structure
-        run: |
-          ls -la
-          cat main.py
+        
+      # Optional: Add step to run tests here (PyTest, Django test suites, etc.)
 
       - name: Zip artifact for deployment
         run: zip release.zip ./* -r
@@ -54,7 +49,7 @@ jobs:
     runs-on: ubuntu-latest
     needs: build
     environment:
-      name: "Production"
+      name: 'Production'
       url: ${{ steps.deploy-to-webapp.outputs.webapp-url }}
     permissions:
       id-token: write #This is required for requesting the JWT
@@ -69,18 +64,18 @@ jobs:
       - name: Unzip artifact for deployment
         run: unzip release.zip
 
+      
       - name: Login to Azure
         uses: azure/login@v2
         with:
-          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_792F15E99AA04C33BD434AB0B14829B4 }}
-          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_77A7828D96D141C3AEBCD9619A2F61D2 }}
-          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_E867B2BCDE3D4A10BFE055864E982AAA }}
+          client-id: ${{ secrets.AZUREAPPSERVICE_CLIENTID_5F491AB3470C40EBAEBF537A235A8496 }}
+          tenant-id: ${{ secrets.AZUREAPPSERVICE_TENANTID_7E536B462C454C56BC2C2D5DE34EB2FB }}
+          subscription-id: ${{ secrets.AZUREAPPSERVICE_SUBSCRIPTIONID_3EFB4486CCC241649A68C8854E257262 }}
 
-      - name: "Deploy to Azure Web App"
+      - name: 'Deploy to Azure Web App'
         uses: azure/webapps-deploy@v3
         id: deploy-to-webapp
         with:
-          app-name: "mycrm"
-          slot-name: "Production"
-          package: "release.zip"
-          start-command: "uvicorn main:app --host 0.0.0.0 --port 8000"
+          app-name: 'mycrm'
+          slot-name: 'Production'
+          
