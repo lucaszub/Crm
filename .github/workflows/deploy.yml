@@ -24,7 +24,7 @@ jobs:
         with:
           creds: ${{ secrets.AZURE_CREDENTIALS }}
 
-      # Log in to Azure Container Registry (ACR)
+      # Log in to Azure Container Registry (ACR)s
       - name: Log in to ACR
         run: |
           az acr login --name acrcrm
