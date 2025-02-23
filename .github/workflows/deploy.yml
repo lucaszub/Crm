@@ -32,9 +32,9 @@ jobs:
       # Build Docker image
       - name: Build Docker image
         run: |
-          docker build -t acrcrm.azurecr.io/acrcrm:v0004 .
+          docker build -t acrcrm.azurecr.io/acrcrm:v0007 .
 
       # Push Docker image to ACR
       - name: Push Docker image to ACR
         run: |
-          docker push acrcrm.azurecr.io/acrcrm:v0004
+          docker push acrcrm.azurecr.io/acrcrm:v0007
