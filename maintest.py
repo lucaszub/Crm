@@ -66,3 +66,5 @@ async def get_clients():
     except Exception as e:
         logging.error(f"Erreur lors de la récupération des clients : {e}")
         raise HTTPException(status_code=500, detail="Erreur lors de la récupération des clients")
+
+

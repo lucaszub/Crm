@@ -38,10 +38,3 @@ jobs:
       - name: Push Docker image to ACR
         run: |
           docker push acrcrm.azurecr.io/acrcrm:v0004
-
-      # Déployer sur Azure Web App
-      - name: Deploy to Azure Web App
-        uses: azure/webapps-deploy@v2
-        with:
-          app-name: weatherapp # Remplace par le nom de ton application Azure Web App
-          images: acrcrm.azurecr.io/acrcrm:v0004 # Assure-toi que c'est le bon nom de l'image
