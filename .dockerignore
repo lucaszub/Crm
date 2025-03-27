@@ -1,0 +1,8 @@
+test.py
+__pycache__/
+main_test.py
+
+test.md
+venv
+.env
+main_test2.py

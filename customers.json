@@ -1,0 +1,27 @@
+[
+    {
+        "id": "1",
+        "name": "Alex Thompson",
+        "email": "a.tompson@company.com",
+        "entreprise": "Comet data",
+        "flag": "🇺🇸",
+        "status": "Inactive",
+        "interaction": "2025-03-06",
+        "department": "Engineering",
+        "role": "Senior Developer",
+        "joinDate": "2023-03-15",
+        "lastActive": "2025-01-06",
+        "numero": "06 19 22 44 33",
+        "note": "Key team member in our San Francisco office, leading several major client projects and mentoring junior developers. Consistently exceeds performance targets and maintains excellent client relationships. Recently completed advanced certification in project management and cloud architecture. Scheduled for quarterly performance review and promotion discussion."
+    },
+    {
+        "name": "Nicolas",
+        "email": "Nicolas@gmail.com",
+        "entreprise": "Silamir",
+        "status": "customers",
+        "numero": "09 90 83 93 99",
+        "role": "Silamir",
+        "interaction": "2025/16/03",
+        "note": "TEST"
+    }
+]

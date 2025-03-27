@@ -55,3 +55,43 @@ Pour approfondir vos connaissances sur la gestion des accès à Azure Key Vault 
 - [Comparaison entre RBAC et les politiques d'accès](https://learn.microsoft.com/en-us/azure/key-vault/general/rbac-access-policy)
 
 En suivant ces étapes et en utilisant les ressources fournies, vous pourrez configurer efficacement l'accès à votre Azure Key Vault en utilisant RBAC, assurant ainsi une gestion sécurisée et centralisée des accès.
+
+## Pour deployer en local simplement
+
+### **Étapes pour Pousser une Image Docker vers ACR**
+
+1. **Se connecter à Azure** (si ce n'est pas déjà fait) :
+
+   ```sh
+   az login
+   ```
+
+2. **Se connecter à ton ACR** :
+
+   ```sh
+   az acr login --name acrappcontainerlucas
+   ```
+
+3. **Construire l'image Docker** (dans le dossier où se trouve ton `Dockerfile`) :
+
+   ```sh
+   docker build -t mon-image:V0002 .
+   ```
+
+4. **Taguer l'image avec l'URL de l'ACR** :
+
+   ```sh
+   docker tag mon-image:V0002 acrappcontainerlucas.azurecr.io/mon-image:V0002
+   ```
+
+5. **Pousser l'image vers l'ACR** :
+   ```sh
+   docker push acrappcontainerlucas.azurecr.io/mon-image:V0002
+   ```
+
+### **Résumé des commandes**
+
+- **`az acr login`** : Connecte ton environnement Docker à l'ACR.
+- **`docker build`** : Crée l'image Docker.
+- **`docker tag`** : Tag l'image pour l'ACR.
+- **`docker push`** : Envoie l'image vers l'ACR.
